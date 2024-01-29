@@ -1,10 +1,34 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 function Card() {
+
+    const [product, setProduct] = useState([]);
+    const [loading, setLoading ] =  useState(false);
+
+    const getProduct = async() => {
+        setLoading(true);
+        try{
+            const result  = await fetch('https://fakestoreapi.com/products');
+            const data = await result.json();
+            setProduct(data);
+            setLoading(false);
+
+        }catch(error){
+            console.log(error);
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        getProduct();
+    }, []);
+
     return (
         <div>
             <h1 className='py-5 text-3xl font-bold text-center '>Top Product</h1>
-            <div className='flex flex-wrap px-4 lg:px-10 '>
+            { loading ?  <div className='flex justify-center '>
+                    <img className='w-16 py-20 ' src="https://i.gifer.com/ZZ5H.gif" alt="" />
+                </div>  : <div className='flex flex-wrap px-4 lg:px-10 '>
                 <div className="w-full p-2 md:w-1/4">
                     <div className="bg-[#ffffff] p-3 rounded-2xl 
                             shadow-[inset_0_0px_3px_rgba(0,0,0,0.6)] hover:-translate-y-1 ">
@@ -75,6 +99,7 @@ function Card() {
                     </div>
                 </div>
             </div>
+        }
         </div>
     )
 }
